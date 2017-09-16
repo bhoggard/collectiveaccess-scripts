@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    collectiveaccess (0.2.3)
+      httparty (~> 0.13)
+    httparty (0.15.6)
+      multi_xml (>= 0.5.2)
+    multi_xml (0.6.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  collectiveaccess (~> 0.2.0)
+
+BUNDLED WITH
+   1.15.3
