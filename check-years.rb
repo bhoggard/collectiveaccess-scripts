@@ -1,26 +1,30 @@
 #!/usr/bin/env ruby
 
-require 'collectiveaccess'
+require 'mysql2'
 require 'csv'
 
-ADMIN_HOST = ENV['CA_ADMIN_HOST']
+$client = Mysql2::Client.new(
+  host: 'localhost', 
+  username: ENV['DB_USER'], 
+  password: ENV['DB_PASS'], 
+  database: ENV['DATABASE']
+)
 
-def check_year(work_id, year)
-  r = CollectiveAccess.get hostname: ADMIN_HOST, 
-                           table_name: 'ca_objects', 
-                           path: "idno/#{work_id}"
-  puts r
-  exit
+# get year in CA database for an ID
+def ca_year(id) 
+  results = $client.query("select work_year from ca_objects where object_id = #{id}")
+  results.first['work_year']
 end
 
 def blank?(s)
   s.nil? || s.to_s.strip.empty?
 end
 
-CSV.foreach(File.expand_path('~/Desktop/works.csv')) do |row|
+CSV.foreach(File.expand_path('~/works.csv')) do |row|
   work_id = row[0]
   title = row[1]
   year = row[3]
   puts "#{work_id}\t#{title}\t#{year}"
-  check_year(work_id, year) if blank?(year)
+  puts ca_year(work_id)
 end
+
